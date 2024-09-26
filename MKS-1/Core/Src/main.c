@@ -92,11 +92,35 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
+  uint8_t i = 0;
+  //uint32_t array[32] = { 1, 0, 1, 0, 1, 0, 0, 1,
+  //                       1, 1, 0, 1, 1, 1, 0, 1,
+  //                       1, 1, 0, 0, 1, 0, 1, 0,
+  //                       1, 0, 0, 0, 0, 0, 0, 0};
+  uint32_t number = 0b10101001110111011100101010000000;
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	//LL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+	//LL_mDelay(200);
+	//if (array[i] == 1) {
+	uint32_t mask = 1<<(31-i);
+
+	if ((number & mask) != 0) {
+		LL_GPIO_SetOutputPin(LD2_GPIO_Port, LD2_Pin);
+	} else {
+		LL_GPIO_ResetOutputPin(LD2_GPIO_Port, LD2_Pin);
+	}
+
+	LL_mDelay(200);
+
+	if (i <= 31) {
+		i++;
+	} else {
+		i = 0;
+	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

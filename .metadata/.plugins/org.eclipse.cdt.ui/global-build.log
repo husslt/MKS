@@ -24,3 +24,146 @@ Finished building: default.size.stdout
  
 Finished building: MKS-1.list
  
+10:35:17 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MKS-1.elf" @"objects.list"   -mcpu=cortex-m0 -T"C:\Temp\240627\MKS\MKS-1\STM32F030R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MKS-1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MKS-1.elf
+ 
+arm-none-eabi-size  MKS-1.elf 
+arm-none-eabi-objdump -h -S MKS-1.elf  > "MKS-1.list"
+   text	   data	    bss	    dec	    hex	filename
+   4896	      4	   1564	   6464	   1940	MKS-1.elf
+Finished building: default.size.stdout
+ 
+Finished building: MKS-1.list
+ 
+10:45:26 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:104:19: error: 'i' undeclared (first use in this function)
+  104 |         if (array[i] == 1) {
+      |                   ^
+../Core/Src/main.c:104:19: note: each undeclared identifier is reported only once for each function it appears in
+../Core/Src/main.c:96:11: warning: variable 'array' set but not used [-Wunused-but-set-variable]
+   96 |   uint8_t array[8] = { 1, 0, 1, 1, 0, 1, 0, 1};
+      |           ^~~~~
+make: *** [Core/Src/subdir.mk:31: Core/Src/main.o] Error 1
+"make -j4 all" terminated with exit code 2. Build might be incomplete.
+10:46:05 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MKS-1.elf" @"objects.list"   -mcpu=cortex-m0 -T"C:\Temp\240627\MKS\MKS-1\STM32F030R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MKS-1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MKS-1.elf
+ 
+arm-none-eabi-size  MKS-1.elf 
+arm-none-eabi-objdump -h -S MKS-1.elf  > "MKS-1.list"
+   text	   data	    bss	    dec	    hex	filename
+   4856	      4	   1564	   6424	   1918	MKS-1.elf
+Finished building: default.size.stdout
+ 
+Finished building: MKS-1.list
+ 
+10:47:28 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MKS-1.elf" @"objects.list"   -mcpu=cortex-m0 -T"C:\Temp\240627\MKS\MKS-1\STM32F030R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MKS-1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MKS-1.elf
+ 
+arm-none-eabi-size  MKS-1.elf 
+arm-none-eabi-objdump -h -S MKS-1.elf  > "MKS-1.list"
+   text	   data	    bss	    dec	    hex	filename
+   4964	      4	   1564	   6532	   1984	MKS-1.elf
+Finished building: default.size.stdout
+ 
+Finished building: MKS-1.list
+ 
+10:51:45 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MKS-1.elf" @"objects.list"   -mcpu=cortex-m0 -T"C:\Temp\240627\MKS\MKS-1\STM32F030R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MKS-1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MKS-1.elf
+ 
+arm-none-eabi-size  MKS-1.elf 
+arm-none-eabi-objdump -h -S MKS-1.elf  > "MKS-1.list"
+   text	   data	    bss	    dec	    hex	filename
+   5112	      4	   1564	   6680	   1a18	MKS-1.elf
+Finished building: default.size.stdout
+ 
+Finished building: MKS-1.list
+ 
+10:52:32 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MKS-1.elf" @"objects.list"   -mcpu=cortex-m0 -T"C:\Temp\240627\MKS\MKS-1\STM32F030R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MKS-1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MKS-1.elf
+ 
+arm-none-eabi-size  MKS-1.elf 
+arm-none-eabi-objdump -h -S MKS-1.elf  > "MKS-1.list"
+   text	   data	    bss	    dec	    hex	filename
+   5112	      4	   1564	   6680	   1a18	MKS-1.elf
+Finished building: default.size.stdout
+ 
+Finished building: MKS-1.list
+ 
+11:03:53 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:110:27: warning: suggest parentheses around comparison in operand of '&' [-Wparentheses]
+  110 |         if (number & mask == 1) {
+      |                      ~~~~~^~~~
+arm-none-eabi-gcc -o "MKS-1.elf" @"objects.list"   -mcpu=cortex-m0 -T"C:\Temp\240627\MKS\MKS-1\STM32F030R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MKS-1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MKS-1.elf
+ 
+arm-none-eabi-size  MKS-1.elf 
+arm-none-eabi-objdump -h -S MKS-1.elf  > "MKS-1.list"
+   text	   data	    bss	    dec	    hex	filename
+   4976	      4	   1564	   6544	   1990	MKS-1.elf
+Finished building: default.size.stdout
+ 
+Finished building: MKS-1.list
+ 
+11:04:21 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MKS-1.elf" @"objects.list"   -mcpu=cortex-m0 -T"C:\Temp\240627\MKS\MKS-1\STM32F030R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MKS-1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MKS-1.elf
+ 
+arm-none-eabi-size  MKS-1.elf 
+arm-none-eabi-objdump -h -S MKS-1.elf  > "MKS-1.list"
+   text	   data	    bss	    dec	    hex	filename
+   4968	      4	   1564	   6536	   1988	MKS-1.elf
+Finished building: default.size.stdout
+ 
+Finished building: MKS-1.list
+ 
+11:07:54 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MKS-1.elf" @"objects.list"   -mcpu=cortex-m0 -T"C:\Temp\240627\MKS\MKS-1\STM32F030R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MKS-1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MKS-1.elf
+ 
+arm-none-eabi-size  MKS-1.elf 
+arm-none-eabi-objdump -h -S MKS-1.elf  > "MKS-1.list"
+   text	   data	    bss	    dec	    hex	filename
+   4964	      4	   1564	   6532	   1984	MKS-1.elf
+Finished building: default.size.stdout
+ 
+Finished building: MKS-1.list
+ 
+11:10:11 **** Incremental Build of configuration Debug for project MKS-1 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DDEBUG -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -DHSE_VALUE=8000000 -DHSE_STARTUP_TIMEOUT=100 -DLSE_STARTUP_TIMEOUT=5000 -DLSE_VALUE=32768 -DHSI_VALUE=8000000 -DLSI_VALUE=40000 -DVDD_VALUE=3300 -DPREFETCH_ENABLE=1 -DINSTRUCTION_CACHE_ENABLE=0 -DDATA_CACHE_ENABLE=0 -c -I../Core/Inc -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "MKS-1.elf" @"objects.list"   -mcpu=cortex-m0 -T"C:\Temp\240627\MKS\MKS-1\STM32F030R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MKS-1.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: MKS-1.elf
+ 
+arm-none-eabi-size  MKS-1.elf 
+arm-none-eabi-objdump -h -S MKS-1.elf  > "MKS-1.list"
+   text	   data	    bss	    dec	    hex	filename
+   4960	      4	   1564	   6528	   1980	MKS-1.elf
+Finished building: default.size.stdout
+ 
+Finished building: MKS-1.list
+ 
