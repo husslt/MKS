@@ -35,6 +35,7 @@
 #define BUTTON_TIME 40
 #define LED_TIME_SHORT 100
 #define LED_TIME_LONG 1000
+#define DELAY 5
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -65,7 +66,7 @@ static void blink() {
 	if (tick > last_blink_tick + BLINK_TIME) {
 		last_blink_tick = tick;
 
-		LL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+		//LL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 	}
 
 }
@@ -74,6 +75,26 @@ static void button1() {
 
 	static uint32_t last_button_tick;
 	static uint32_t off_time;
+	static uint16_t debounce = 0xFFFF;
+	static uint32_t debounce_tick;
+
+	// Novy zpusob vzorkovani S1 pro toggle LED1
+	if (tick > debounce_tick + DELAY) {
+		debounce_tick = tick;
+
+		if (!LL_GPIO_IsInputPinSet(S1_GPIO_Port, S1_Pin)) {
+			debounce <<= 1;
+		}
+		else {
+			debounce <<= 1;
+			debounce |= 1;
+		}
+		if (debounce == 0x8000) {
+			LL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+		}
+
+	}
+
 
 	// Vzorkovani tlacitka
 	if (tick > last_button_tick + BUTTON_TIME) {
@@ -82,8 +103,9 @@ static void button1() {
 		static uint32_t old_s2;
 		uint32_t new_s2 = LL_GPIO_IsInputPinSet(S2_GPIO_Port, S2_Pin);
 
-		static uint32_t old_s1;
-		uint32_t new_s1 = LL_GPIO_IsInputPinSet(S1_GPIO_Port, S1_Pin);
+		// S1 se pouziva pro nove vzorkovani, takze ho vypneme
+		//static uint32_t old_s1;
+		//uint32_t new_s1 = LL_GPIO_IsInputPinSet(S1_GPIO_Port, S1_Pin);
 
 
 		if (old_s2 && !new_s2) { // falling edge
@@ -92,11 +114,11 @@ static void button1() {
 		}
 		old_s2 = new_s2;
 
-		if (old_s1 && !new_s1) { // falling edge
-			off_time = tick + LED_TIME_LONG;
-			LL_GPIO_SetOutputPin(LED2_GPIO_Port, LED2_Pin);
-		}
-		old_s1 = new_s1;
+		//if (old_s1 && !new_s1) { // falling edge
+		//	off_time = tick + LED_TIME_LONG;
+		//	LL_GPIO_SetOutputPin(LED2_GPIO_Port, LED2_Pin);
+		//}
+		//old_s1 = new_s1;
 	}
 
 	// Zhasinani LEDky
