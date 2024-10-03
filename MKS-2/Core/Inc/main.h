@@ -55,7 +55,7 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern volatile uint32_t tick;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

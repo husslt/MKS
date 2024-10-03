@@ -31,7 +31,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define BLINK_TIME 300
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -42,7 +42,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+volatile uint32_t tick;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -55,7 +55,17 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static void blink() {
 
+	static uint32_t last_blink_tick;
+
+	if (tick > last_blink_tick + BLINK_TIME) {
+		last_blink_tick = tick;
+
+	LL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+	}
+
+}
 /* USER CODE END 0 */
 
 /**
@@ -90,13 +100,14 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  LL_SYSTICK_EnableIT();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  blink();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
