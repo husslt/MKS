@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -32,6 +32,9 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define BLINK_TIME 300
+#define BUTTON_TIME 40
+#define LED_TIME_SHORT 100
+#define LED_TIME_LONG 1000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,10 +65,48 @@ static void blink() {
 	if (tick > last_blink_tick + BLINK_TIME) {
 		last_blink_tick = tick;
 
-	LL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+		LL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 	}
 
 }
+
+static void button1() {
+
+	static uint32_t last_button_tick;
+	static uint32_t off_time;
+
+	// Vzorkovani tlacitka
+	if (tick > last_button_tick + BUTTON_TIME) {
+		last_button_tick = tick;
+
+		static uint32_t old_s2;
+		uint32_t new_s2 = LL_GPIO_IsInputPinSet(S2_GPIO_Port, S2_Pin);
+
+		static uint32_t old_s1;
+		uint32_t new_s1 = LL_GPIO_IsInputPinSet(S1_GPIO_Port, S1_Pin);
+
+
+		if (old_s2 && !new_s2) { // falling edge
+			off_time = tick + LED_TIME_SHORT;
+			LL_GPIO_SetOutputPin(LED2_GPIO_Port, LED2_Pin);
+		}
+		old_s2 = new_s2;
+
+		if (old_s1 && !new_s1) { // falling edge
+			off_time = tick + LED_TIME_LONG;
+			LL_GPIO_SetOutputPin(LED2_GPIO_Port, LED2_Pin);
+		}
+		old_s1 = new_s1;
+	}
+
+	// Zhasinani LEDky
+	if (tick > off_time) {
+		LL_GPIO_ResetOutputPin(LED2_GPIO_Port, LED2_Pin);
+	}
+
+}
+
+
 /* USER CODE END 0 */
 
 /**
@@ -100,18 +141,20 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  LL_SYSTICK_EnableIT();
+	LL_SYSTICK_EnableIT();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  blink();
+	while (1)
+	{
+		blink();
+
+		button1();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+	}
   /* USER CODE END 3 */
 }
 
@@ -245,19 +288,10 @@ static void MX_GPIO_Init(void)
   LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTC, LL_SYSCFG_EXTI_LINE13);
 
   /**/
-  LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTC, LL_SYSCFG_EXTI_LINE0);
-
-  /**/
   LL_GPIO_SetPinPull(B1_GPIO_Port, B1_Pin, LL_GPIO_PULL_NO);
 
   /**/
-  LL_GPIO_SetPinPull(S2_GPIO_Port, S2_Pin, LL_GPIO_PULL_UP);
-
-  /**/
   LL_GPIO_SetPinMode(B1_GPIO_Port, B1_Pin, LL_GPIO_MODE_INPUT);
-
-  /**/
-  LL_GPIO_SetPinMode(S2_GPIO_Port, S2_Pin, LL_GPIO_MODE_INPUT);
 
   /**/
   EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_13;
@@ -267,11 +301,10 @@ static void MX_GPIO_Init(void)
   LL_EXTI_Init(&EXTI_InitStruct);
 
   /**/
-  EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_0;
-  EXTI_InitStruct.LineCommand = ENABLE;
-  EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
-  EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_FALLING;
-  LL_EXTI_Init(&EXTI_InitStruct);
+  GPIO_InitStruct.Pin = S2_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+  LL_GPIO_Init(S2_GPIO_Port, &GPIO_InitStruct);
 
   /**/
   GPIO_InitStruct.Pin = S1_Pin;
@@ -303,10 +336,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(LED2_GPIO_Port, &GPIO_InitStruct);
 
-  /* EXTI interrupt init*/
-  NVIC_SetPriority(EXTI0_1_IRQn, 0);
-  NVIC_EnableIRQ(EXTI0_1_IRQn);
-
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
@@ -322,11 +351,11 @@ static void MX_GPIO_Init(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1)
+	{
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 
@@ -341,7 +370,7 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
+	/* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
