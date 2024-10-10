@@ -91,8 +91,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  uint32_t val = 0;
   sct_init();
-  sct_led(0x7A5C36DE);
   HAL_Delay(1000);
   /* USER CODE END 2 */
 
@@ -101,7 +101,12 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	 val += 111;
+	 if (val > 999) {
+		 val = 0;
+	 }
+	 sct_value(val);
+	 HAL_Delay(1000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
