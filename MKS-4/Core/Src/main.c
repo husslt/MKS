@@ -105,7 +105,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  sct_value(123,5);
+	  // Rescale display and bargraph value from pot
+	  sct_value(raw_pot * 500.9 / 4095, raw_pot * 9 / 4095);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
