@@ -32,6 +32,13 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define ADC_Q 6
+
+/* Temperature sensor calibration value address */
+#define TEMP110_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7C2))
+#define TEMP30_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7B8))
+/* Internal voltage reference calibration value address */
+#define VREFINT_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7BA))
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,7 +52,9 @@ ADC_HandleTypeDef hadc;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-static volatile uint32_t raw_pot;
+static volatile uint32_t raw_pot, raw_temp, raw_volt;
+static enum { SHOW_POT, SHOW_TEMP, SHOW_VOLT } state;
+volatile uint32_t time;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,9 +70,27 @@ static void MX_ADC_Init(void);
 /* USER CODE BEGIN 0 */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 	static uint32_t avg_pot, channel;
-	raw_pot = avg_pot >> ADC_Q;
-	avg_pot -= raw_pot;
-	avg_pot += HAL_ADC_GetValue(hadc);
+
+	switch (channel) {
+		case 0:
+			raw_pot = avg_pot >> ADC_Q;
+			avg_pot -= raw_pot;
+			avg_pot += HAL_ADC_GetValue(hadc);
+			break;
+		case 1:
+			raw_temp = HAL_ADC_GetValue(hadc);
+			break;
+		case 2:
+			raw_volt = HAL_ADC_GetValue(hadc);
+	}
+
+	if (__HAL_ADC_GET_FLAG(hadc, ADC_FLAG_EOS)) {
+			channel = 0;
+		}
+	else {
+		channel++;
+	}
+
 
 }
 /* USER CODE END 0 */
@@ -103,14 +130,51 @@ int main(void)
   HAL_ADCEx_Calibration_Start(&hadc);
   HAL_ADC_Start_IT(&hadc);
   sct_init();
+  state = SHOW_POT;
+  uint8_t locked_state;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  // Rescale display and bargraph value from pot
-	  sct_value(raw_pot * 500.9 / 4095, raw_pot * 9 / 4095);
+	  uint32_t voltage = 330 * (*VREFINT_CAL_ADDR) / raw_volt;
+	  int32_t temperature = (raw_temp - (int32_t)(*TEMP30_CAL_ADDR));
+	  temperature = temperature * (int32_t)(110 - 30);
+	  temperature = temperature / (int32_t)(*TEMP110_CAL_ADDR - *TEMP30_CAL_ADDR);
+	  temperature = temperature + 30;
+
+
+	  if (HAL_GetTick() < (time + 1000) ) {
+		  if (locked_state == 0) {
+			  state = SHOW_TEMP;
+		  } else if (locked_state == 1) {
+			  state = SHOW_VOLT;
+		  }
+	  }
+
+	  switch (state) {
+	  	  case SHOW_POT:
+	  		  // Rescale display and bargraph value from pot
+	  		  sct_value(raw_pot * 500.9 / 4095, raw_pot * 9 / 4095);
+	  		  state = SHOW_TEMP;
+	  		  break;
+	  	  case SHOW_TEMP:
+	  		  sct_value(temperature, 0);
+	  		  state = SHOW_VOLT;
+	  		  break;
+	  	  case SHOW_VOLT:
+	  		  sct_value(voltage, 0);
+	  		  state = SHOW_POT;
+	  		  break;
+	  }
+	  if (HAL_GPIO_ReadPin(S1_GPIO_Port, S1_Pin) == 0) {
+		  time = HAL_GetTick();
+		  locked_state = 0;
+	  } else if (HAL_GPIO_ReadPin(S2_GPIO_Port, S2_Pin) == 0) {
+		  time = HAL_GetTick();
+		  locked_state = 1;
+	  }
 
     /* USER CODE END WHILE */
 
@@ -207,6 +271,22 @@ static void MX_ADC_Init(void)
   {
     Error_Handler();
   }
+
+  /** Configure for the selected ADC regular channel to be converted.
+  */
+  sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
+  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel to be converted.
+  */
+  sConfig.Channel = ADC_CHANNEL_VREFINT;
+  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN ADC_Init 2 */
 
   /* USER CODE END ADC_Init 2 */
@@ -276,6 +356,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : S2_Pin S1_Pin */
+  GPIO_InitStruct.Pin = S2_Pin|S1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LD2_Pin */
   GPIO_InitStruct.Pin = LD2_Pin;
