@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -31,7 +31,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define RX_BUF_LEN 64
+#define CMD_BUF_LEN (RX_BUF_LEN)
+#define uart_rx_write_ptr (RX_BUF_LEN - hdma_usart2_rx.Instance->CNDTR)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,7 +46,8 @@ UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
 
 /* USER CODE BEGIN PV */
-
+static uint8_t uart_rx_buf[RX_BUF_LEN];
+static volatile uint16_t uart_rx_read_ptr = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,6 +61,27 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int _write (int file, char const *buf, int n) {
+	HAL_UART_Transmit(&huart2, (uint8_t *)buf, n, HAL_MAX_DELAY);
+	return n;
+}
+static void uart_process_command (const char* data) {
+	printf("Prijata data: %s\n", data);
+}
+
+static void uart_byte_available(uint8_t c) {
+	static uint16_t cnt;
+	static char data[CMD_BUF_LEN];
+
+	if (cnt < CMD_BUF_LEN && c >= 32 && c <= 126) {
+		data[cnt++] = c;
+	}
+	if ( (c == '\n' || c == '\r') && cnt > 0) {
+		data[cnt] = '\0';
+		cnt = 0;
+		uart_process_command(data);
+	}
+}
 
 /* USER CODE END 0 */
 
@@ -94,15 +118,29 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_UART_Receive_DMA(&huart2, uart_rx_buf, RX_BUF_LEN);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  /*
 	  uint8_t c;
 	  HAL_UART_Receive(&huart2, &c, sizeof(c), HAL_MAX_DELAY);
 	  HAL_UART_Transmit(&huart2, &c, sizeof(c), HAL_MAX_DELAY);
+	  */
+	  while (uart_rx_read_ptr != uart_rx_write_ptr) {
+		  uint8_t b = uart_rx_buf[uart_rx_read_ptr];
+
+		  if (++uart_rx_read_ptr >= RX_BUF_LEN) {
+			  uart_rx_read_ptr = 0;
+		  }
+		  uart_byte_available(b);
+	  }
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
