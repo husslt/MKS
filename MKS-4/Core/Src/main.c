@@ -55,6 +55,7 @@ UART_HandleTypeDef huart2;
 static volatile uint32_t raw_pot, raw_temp, raw_volt;
 static enum { SHOW_POT, SHOW_TEMP, SHOW_VOLT } state;
 volatile uint32_t time;
+volatile uint32_t time_switch;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -150,23 +151,24 @@ int main(void)
 			  state = SHOW_TEMP;
 		  } else if (locked_state == 1) {
 			  state = SHOW_VOLT;
+		  } else {
+			  state = SHOW_POT;
 		  }
 	  }
-
-	  switch (state) {
-	  	  case SHOW_POT:
-	  		  // Rescale display and bargraph value from pot
-	  		  sct_value(raw_pot * 500.9 / 4095, raw_pot * 9 / 4095);
-	  		  state = SHOW_TEMP;
-	  		  break;
-	  	  case SHOW_TEMP:
-	  		  sct_value(temperature, 0);
-	  		  state = SHOW_VOLT;
-	  		  break;
-	  	  case SHOW_VOLT:
-	  		  sct_value(voltage, 0);
-	  		  state = SHOW_POT;
-	  		  break;
+	 switch (state) {
+	  	  	  case SHOW_POT:
+	  	  		  // Rescale display and bargraph value from pot
+				  sct_value(raw_pot * 500.9 / 4095, raw_pot * 9 / 4095);
+				  time_switch = HAL_GetTick();
+				  break;
+			  case SHOW_TEMP:
+				  sct_value(temperature, 0);
+				  time_switch = HAL_GetTick();
+				  break;
+			  case SHOW_VOLT:
+				  sct_value(voltage, 0);
+				  time_switch = HAL_GetTick();
+				  break;
 	  }
 	  if (HAL_GPIO_ReadPin(S1_GPIO_Port, S1_Pin) == 0) {
 		  time = HAL_GetTick();
