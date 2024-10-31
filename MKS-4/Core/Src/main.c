@@ -151,9 +151,9 @@ int main(void)
 			  state = SHOW_TEMP;
 		  } else if (locked_state == 1) {
 			  state = SHOW_VOLT;
-		  } else {
-			  state = SHOW_POT;
 		  }
+	  } else {
+		  state = SHOW_POT;
 	  }
 	 switch (state) {
 	  	  	  case SHOW_POT:
