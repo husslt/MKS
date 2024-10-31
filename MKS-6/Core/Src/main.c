@@ -50,6 +50,7 @@ UART_HandleTypeDef huart2;
 int16_t data[] = {
 #include "data.dlm"
 };
+static enum { S2NTC, S1DS } state;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -98,12 +99,13 @@ int main(void)
   MX_USART2_UART_Init();
   MX_ADC_Init();
   /* USER CODE BEGIN 2 */
-  OWInit();
-  sct_init();
-  sct_value(111,0);
-
   HAL_ADCEx_Calibration_Start(&hadc);
   HAL_ADC_Start(&hadc);
+  OWInit();
+
+  sct_init();
+  sct_value(888, 8);
+  state = S1DS;
 
   /* USER CODE END 2 */
 
@@ -114,20 +116,51 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  uint32_t result;
-	  result = HAL_ADC_GetValue(&hadc);
-	  sct_value(data[result], 0);
-	  HAL_Delay(100);
-
-	  /*
-	  OWConvertAll();
-	  HAL_Delay(CONVERT_T_DELAY);
-
-	  int16_t value;
-	  if (OWReadTemperature(&value)) {
-		  sct_value(value/10 , 0);
+	  static uint32_t result = 0;
+	  static int16_t value;
+	  static uint32_t timeADC = 0;
+	  static uint32_t timeDS = 0;
+	  static uint8_t converting = 0;
+	  static uint8_t start = 0;
+	  if (HAL_GetTick() > (timeADC + 1000)) {
+		  result = HAL_ADC_GetValue(&hadc);
+		  timeADC = HAL_GetTick();
 	  }
-	  */
+
+	  if (!converting && (HAL_GetTick() > (timeDS + CONVERT_T_DELAY) )) {
+		  OWConvertAll();
+		  timeDS = HAL_GetTick();
+		  converting = 1;
+	  }
+
+	  if (HAL_GetTick() > (timeDS + CONVERT_T_DELAY)) {
+		  OWReadTemperature(&value);
+		  converting = 0;
+		  start = 1;
+	  }
+
+	  if (HAL_GPIO_ReadPin(S1_GPIO_Port, S1_Pin) == 0) {
+		  state = S1DS;
+	  } else if (HAL_GPIO_ReadPin(S2_GPIO_Port, S2_Pin) == 0) {
+		  state = S2NTC;
+	  }
+	  switch (state) {
+	  	  case S2NTC:
+	  		  sct_value(data[result], 0);
+	  		  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 1);
+	  		  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, 0);
+	  		  break;
+	  	  case S1DS:
+	  		  if (!start) {
+	  			  sct_value(888,8);
+	  		  }
+	  		  if (start && OWReadTemperature(&value)) {
+	  			  sct_value(value/10 , 0);
+	  		  }
+	  		  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 0);
+	  		  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, 1);
+	  		  break;
+	  }
   }
   /* USER CODE END 3 */
 }
