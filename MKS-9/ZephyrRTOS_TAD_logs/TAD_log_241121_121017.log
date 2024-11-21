@@ -1,0 +1,21 @@
+"Task Aware Debugger for GDB" version 11.10.0 (202404041456)
+Copyright 2016-2023 NXP
+==================================
+11:47:41.311 INFO: [ZephyrRTOS] .config file could not be read [Program file does not exist]
+11:47:41.312 INFO: [TadModel] DSF session ID 27 has started.
+11:47:49.464 INFO: [ZephyrRTOS] .config file could not be read [invalid launch in DSF session]
+11:47:49.464 INFO: [TadModel] DSF session ID 28 has started.
+11:47:55.704 INFO: [TadState] TAD state changed: DEBUG_STARTED -> DEBUG_INIT_0 (SUSPENDED, USER_REQUEST)
+11:47:55.815 INFO: [TadState] TAD state changed: DEBUG_INIT_0 -> DEBUG_INIT_1 (SUSPENDED, USER_REQUEST)
+11:47:56.795 INFO: [TadState] TAD state changed: DEBUG_INIT_1 -> DEBUG_SUSPENDED (RESUMED, USER_REQUEST)
+11:47:56.830 INFO: [TadState] TAD state changed: DEBUG_SUSPENDED -> DEBUG_SUSPENDED (SUSPENDED, BREAKPOINT)
+11:48:04.299 INFO: [TadState] TAD state changed: DEBUG_SUSPENDED -> DEBUG_RESUMED (RESUMED, USER_REQUEST)
+11:49:30.408 INFO: [ZephyrRTOS] .config file could not be read [C:\Temp\240627\MKS\MKS-9\lpcxpresso55s69_hello_world_ns\Debug\.config (The system cannot find the file specified)]
+11:49:30.408 INFO: [TadModel] DSF session ID 29 has started.
+11:49:31.853 INFO: [TadState] TAD state changed: DEBUG_STARTED -> DEBUG_INIT_0 (SUSPENDED, SIGNAL)
+11:49:32.600 INFO: [TadState] TAD state changed: DEBUG_INIT_0 -> DEBUG_INIT_1 (SUSPENDED, USER_REQUEST)
+11:49:33.319 INFO: [TadState] TAD state changed: DEBUG_INIT_1 -> DEBUG_SUSPENDED (RESUMED, USER_REQUEST)
+11:49:33.357 INFO: [TadState] TAD state changed: DEBUG_SUSPENDED -> DEBUG_SUSPENDED (SUSPENDED, BREAKPOINT)
+11:49:39.384 INFO: [TadState] TAD state changed: DEBUG_SUSPENDED -> DEBUG_RESUMED (RESUMED, USER_REQUEST)
+11:49:39.384 INFO: [TadState] TAD state changed: DEBUG_SUSPENDED -> DEBUG_RESUMED (RESUMED, USER_REQUEST)
+12:10:17.535 INFO: [TadModel] DSF session ID 29 has ended.
